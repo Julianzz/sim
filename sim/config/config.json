@@ -1,0 +1,16 @@
+{
+	"thread_num": 4,
+	"use_local_idf": false,
+	"source_dir": "../source",
+    "wordsplit_dic":[ 
+            "word.name.dic",
+            "word.soso.dic",
+            "word.sm.dic",
+            "word.xzqh.dic",
+            "word.roads.dic",
+            "word.number.dic"
+    ],
+    "strategy": {
+        "online":"config/strategy/online.json"
+    }
+}

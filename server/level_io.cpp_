@@ -1,0 +1,182 @@
+/*
+ * LevelIO.cpp
+ *
+ *  Created on: 2012-8-30
+ *      Author: lzz
+ */
+#include "level_io.h"
+#include "StringUtility.h"
+     
+using namespace std;
+ 
+static const int max_conn_retry_times = 100;
+static const int conn_sleep_time = 20;
+
+int CLevelIO::init() {
+    return reconnect();
+}
+
+int CLevelIO::connect() {
+    CWX_INT32 lRet = -1;
+    int retry_times =0;
+    const char* conf = configFile_.c_str();
+    while(retry_times<max_conn_retry_times){  
+        retry_times +=1;
+        m_conns_ = new StorageApi();
+        lRet = m_conns_->connect(conf);
+        if (lRet != STORAGE_SERVER_SUCCESS){
+             std::cerr<<"error in leveldb ret:"<<lRet<<"retry:"<<retry_times<<std::endl;
+             delete m_conns_;
+             m_conns_ = NULL;
+             sleep(conn_sleep_time);
+        }else{
+             break;
+        }
+    }
+    assert(lRet==STORAGE_SERVER_SUCCESS);
+    return 0;
+}
+
+int CLevelIO::reconnect() {
+    reset();
+    return connect();
+}
+int CLevelIO::reset() {
+    if(m_conns_ != NULL) {
+        m_conns_->clear();
+        delete m_conns_;
+        m_conns_ = NULL;               
+    }
+    return 0;
+}
+
+int CLevelIO::get(const IDType id, QueryResParam& oQueryResParam,QueryReqParam& oQueryReqParam) {
+
+    int isError = 0;
+    int retrytime = 0;
+    int retStatus = 0; 
+    CWX_INT32 lRet = 0;
+
+    if( m_conns_ == NULL ) {
+        reconnect();
+    }
+    while( retrytime < maxretrytime) {
+        isError = 0; 
+        retStatus = 0;
+        oQueryResParam.clear();
+        lRet=m_conns_->get_data(oQueryReqParam,oQueryResParam);
+        if (lRet!=STORAGE_SERVER_SUCCESS) {
+            isError = -1; 
+            retStatus = -1;
+        }
+        if( oQueryResParam.getRetCode() != STORAGE_SERVER_SUCCESS){
+            retStatus = -1;
+            if ( oQueryResParam.getRetCode() != DB_STORAGE_NOT_FOUND_KEY) {
+               isError = -1;
+            }
+        }
+        if (isError !=0 ) {
+            std::cerr<<"fetch data error ret="<<lRet<<","<<"retrytime="<<retrytime<<",code=" \
+			    <<oQueryResParam.getRetCode()<<std::endl; 
+        } else {
+            return retStatus;
+        }  
+        reconnect();
+        retrytime++;
+    };
+
+    if (isError != 0) { 
+        std::cerr<< "storage return error: id="<< "["<< id<< "]" <<"serverRet= ["
+                <<lRet<<"],resCode=["<<oQueryResParam.getRetCode() <<"] "<<std::endl;
+        reset();
+    }
+    return retStatus;
+}
+  
+int CLevelIO::build( const string& tableName, const IDType id,
+        const vector<string>& fields, 
+        QueryReqParam& oQueryReqParam ) {
+    oQueryReqParam.clear();
+
+    oQueryReqParam.setTableName(tableName.c_str());
+    oQueryReqParam.setBucketId(id);
+    oQueryReqParam.setPrimaryKey(id);
+    vector<string>::const_iterator iter = fields.begin();
+    for(;iter!=fields.end();iter++){
+        oQueryReqParam.insertNeedField(iter->c_str()) ;   
+    }
+    oQueryReqParam.setEffective(true);                 
+    return 0;    
+}
+
+int CLevelIO::get(const string& tableName, const IDType id,
+            const vector<string>& fields,
+                vector<string>& results ) {
+                
+    QueryResParam oQueryResParam;
+    QueryReqParam oQueryReqParam;
+
+    this->build(tableName, id, fields, oQueryReqParam );
+
+    int fetchStatus  = this->get(id,oQueryResParam,oQueryReqParam);
+    if( fetchStatus != 0) {
+        return -1;
+    }
+
+    const char* values  = oQueryResParam.getRetContent();
+    string ret(values);
+    StringUtility::SplitString(ret,"\t",results,true);  
+    
+    vector<string>& keys = oQueryReqParam.getNeedFieldVector();
+    if (keys.size() != results.size() ) {
+        std::cerr<< "type:"<<tableName<<" "<< id<< " error in return fields lenght" <<std::endl;
+        return -1; 
+    }
+    return 0;
+        
+}
+
+int CLevelIO::get(const string& tableName, const IDType id,
+            const vector<string>& fields,
+            map<string,string>& result ) {
+                
+    vector<string> results;
+    this->get(tableName, id, fields, results );
+    
+    string fullValue = "";
+    vector<string>::const_iterator iter  = fields.begin();
+    for(;iter != fields.end();iter++) {
+        fullValue += *iter+"\t" ;
+    }
+    if ( results.size() != fields.size()) {
+        std::cerr<< "storage return fields num is not consistent,["<<
+            fullValue.c_str()<<"]" <<std::endl;
+        return -1;
+    }
+
+    vector<string>::iterator valueIter = results.begin();
+    vector<string>::const_iterator keyIter = fields.begin();
+    for( ;keyIter != fields.end() && valueIter != results.end(); keyIter++,valueIter++ ){
+        result[*keyIter] = *valueIter;
+    }
+    
+    /*
+    IDType fetchId = StringUtility::Str2ULongLong(result["rawid"]);
+    if ( fetchId != id ) {
+        std::cerr<< "storge return rawid errro line="<<__LINE__<< " :["<< id 
+            << "],[" << fetchId <<std::endl;
+        return -1;
+    }
+    */
+    
+    //result["orig_content_"] = ret;
+    return  0;
+}
+
+void CLevelIO::free(){
+    if (m_conns_ !=NULL){
+        delete m_conns_;
+        m_conns_ = NULL;
+    }
+}
+
