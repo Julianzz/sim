@@ -1,0 +1,182 @@
+{
+    "debug": false,
+    "find_in_self": true,
+    "del_same_id": true,
+
+    "out_base_sgl": true,
+    "out_inc_sgl": true,
+
+    "name_same_weight": 1.0,
+    "name_sub_same_weight": 0.175,
+    "name_diff_weight": 1.0,
+    "name_sub_diff_weight": 0.175,
+    "poisim_all_output_th": 0.0,
+    "useless_tel_threshold": 20,
+
+    "base_inc_sim_func": "poiSimMax",
+    "inc_inc_sim_func": "poiSimAll",
+        
+    "sim_rules": [
+        
+        {  "method":"InitDeal", "params":{ } },
+        {  "method":"GenDistanceDeal", "params":{ } }, 
+        {  "method":"LenDiffDeal", "params":{ } },  
+        {  "method":"AddressSimDeal", "params":{ } },
+        {  "method":"TelSameDeal", "params":{ } },
+        {  "method":"SameTypeDeal", "params":{ } },  
+        {  "method":"ObjDeal", "params":{ } },
+        {  "method":"BracketScore", "params":{ } } ,
+        {  "method":"IncludeNameDeal", "params":{ } },
+        
+        
+        {  "method":"SameIDStratey", "params":{ } },
+        {  "method":"DiffGovLevelStratey", "params":{ } },
+        {  "method":"DistanceStratey", "params":{
+                "airport_recall_distance":6000.0,
+                "airport_reliable_distance":6000.0,
+                "train_recall_distance":2000,
+                "train_reliable_distance":500,
+                "default_recall_distance":3000,
+                "default_reliable_distance":100,
+                "addr_sim":0.52
+            } },
+            
+        {  "method":"SpecSourceStratey", "params":{ 
+                "source_name":["road_cross"]
+            } },
+            
+        {  "method":"RoadStratey", "params":{ 
+                "reliable_distance":400
+            } },
+            
+        {  "method":"SameNameStratey", "params":{
+                "recall_distance":3000,
+                "reliable_distance":1000,
+                "addr_sim":0.52
+    
+            } },
+            
+        {  "method":"DiffDoorStratey", "params":{ 
+               "distance":5.0
+        } }, 
+        
+        {  "method":"DiffDpMarkStratey", "params":{
+               "distance":100.0,
+               "addr_sim":0.52
+       
+        } },
+
+        {  "method":"AtmStratey", "params":{ } },
+        {  "method":"AliasStrategy", "params":{ } },
+        {  "method":"DiffGovTailStratey", "params":{ 
+            "type_set":[ "26" ]
+        } },   
+        {  "method":"TypeNameStratey", "params":{ } },
+
+        {  "method":"BridgeStratey", "params":{ } },
+        {  "method":"UnlackWordStratey", "params":{ } },
+        {  "method":"DiffNumStratey", "params":{ } },
+        {  "method":"DiffDizhiStratey", "params":{ } },
+        {  "method":"DiffFendianStratey", "params":{ } },
+        {  "method":"DiffTypeStratey", "params":{ } },
+        {  "method":"DiffBuidTypeStratey", "params":{ } },
+        {  "method":"TrainStratey", "params":{ } },
+        {  "method":"ChainStratey", "params":{ } },  
+        
+        
+        
+        {  "method":"DiffNameDeal", "params":{ } },
+        {  "method":"InBracketDeal", "params":{ } },
+        {  "method":"PinYinDeal", "params":{ } },
+        {  "method":"IncludeDeal", "params":{ } },
+        {  "method":"OneSideRoadDeal", "params":{ } },
+        {  "method":"TypeWordDeal", "params":{ } } ,
+        {  "method":"SameTypeWordDeal", "params":{ } },
+        {  "method":"ChainNameDeal", "params":{ } },
+        {  "method":"GovDistrictDeal", "params":{ } },    
+        {  "method":"FenDianDeal", "params":{ } },
+        {  "method":"InNameDeal", "params":{ } },
+        {  "method":"DiffAccurateKeywordStrategy", "params":{ } },
+        {  "method":"DiffParkStratey", "params":{ } },
+        {  "method":"DiffWordUnlackStratey", "params":{ } },
+        {  "method":"NameScore", "params":{ } } ,
+        {  "method":"NotFreqStratey", "params":{ } },
+        {  "method":"DiffNameStratey", "params":{ } },
+        {  "method":"TypeScore", "params":{ } },
+        {  "method":"TelScore", "params":{ } } ,  
+        {  "method":"AddressScore", "params":{ } } ,    
+        {  "method":"SameTailScore", "params":{ } } ,
+        {  "method":"AccurateTypeScore", "params":{ } } ,  
+
+        {  "method":"SpecTypeScore", "params":{ } } ,
+        {  "method":"DistanceScore", "params":{ } } ,
+        {  "method":"InBracketScore", "params":{ } } , 
+        {  "method":"SameNumScore", "params":{ } } , 
+        {  "method":"SameATScore", "params":{ } } ,       
+        {  "method":"AreaSubPoiScore", "params":{ } } ,  
+        {  "method":"ComputeScore", "params":{ } } 
+        
+    ],
+
+    "base_rules": [
+        {  "method":"InitPre", "params":{ } },
+        {  "method":"ClassifyPre", "params":{ } },
+        {  "method":"AddressPre", "params":{ } },
+        {  "method":"TypePre", "params":{ } },
+        {  "method":"NamePre", "params":{ } },
+        {  "method":"NameDingCanPre", "params":{ } },
+        {  "method":"NameGovPre", "params":{ } },
+        {  "method":"NameTrainPre", "params":{ } },
+        {  "method":"RemovePuncPre", "params":{ } },
+        {  "method":"NameBracketPre", "params":{ } },        
+        {  "method":"NameTailPre", "params":{ } },
+        {  "method":"WordSplitPre", "params":{ } },
+        {  "method":"NameTransPre", "params":{ } },
+        {  "method":"MergeWordPre", "params":{ } },
+        {  "method":"WordTransPre", "params":{ } },
+        {  "method":"RecordPre", "params":{ } },
+        {  "method":"AddBracketNamePre", "params":{ } },
+        {  "method":"FormatVecPre", "params":{ } },
+        {  "method":"DpMarkPre", "params":{ } },
+        {  "method":"NameFilterPre", "params":{ } }, 
+        {  "method":"NameAddressPre", "params":{ } },
+        {  "method":"MergeWordPre", "params":{ } },     
+        {  "method":"UnlackWordPre", "params":{ } },      
+        {  "method":"BigramPre", "params":{ } },
+        {  "method":"SpecialPre", "params":{ } },    
+        {  "method":"NamesSetPre", "params":{ } },
+        {  "method":"GridWordPre", "params":{ } },
+        {  "method":"LastPre", "params":{ } }               
+    ],
+
+    "inc_rules": [
+        {  "method":"InitPre", "params":{ } },
+        {  "method":"ClassifyPre", "params":{ } },
+        {  "method":"AddressPre", "params":{ } },
+        {  "method":"TypePre", "params":{ } },
+        {  "method":"NamePre", "params":{ } },
+        {  "method":"NameDingCanPre", "params":{ } },
+        {  "method":"NameGovPre", "params":{ } },
+        {  "method":"NameTrainPre", "params":{ } },
+        {  "method":"RemovePuncPre", "params":{ } },
+        {  "method":"NameBracketPre", "params":{ } },        
+        {  "method":"NameTailPre", "params":{ } },
+        {  "method":"WordSplitPre", "params":{ } },
+        {  "method":"NameTransPre", "params":{ } },
+        {  "method":"MergeWordPre", "params":{ } },
+        {  "method":"WordTransPre", "params":{ } },
+        {  "method":"RecordPre", "params":{ } },
+        {  "method":"AddBracketNamePre", "params":{ } },
+        {  "method":"FormatVecPre", "params":{ } },
+        {  "method":"DpMarkPre", "params":{ } },
+        {  "method":"NameFilterPre", "params":{ } }, 
+        {  "method":"NameAddressPre", "params":{ } },
+        {  "method":"MergeWordPre", "params":{ } },     
+        {  "method":"UnlackWordPre", "params":{ } },      
+        {  "method":"BigramPre", "params":{ } },
+        {  "method":"SpecialPre", "params":{ } },    
+        {  "method":"NamesSetPre", "params":{ } },
+        {  "method":"GridWordPre", "params":{ } },
+        {  "method":"LastPre", "params":{ } } 
+    ] 
+}
