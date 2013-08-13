@@ -25,7 +25,8 @@ public:
     // others
     virtual bool processRecord( PreProcData* pre_proc_data,
             const Record* record ) {
-
+        
+        std::string oldName = pre_proc_data->m_format_name;
     	pre_proc_data->m_del_punc_name = pre_proc_data->m_format_name;
 
     	// È¥µô±êµã·ûºÅ
@@ -44,6 +45,9 @@ public:
     			|| pre_proc_data->m_main_type == "24") {
     		formatNumName(pre_proc_data->m_format_name);
     	}
+        
+        std::cout<<"====="<<oldName<<","<<pre_proc_data->m_del_punc_name<<","<<
+             pre_proc_data->m_format_name <<std::endl;
         
         return true;
     };

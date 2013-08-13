@@ -30,8 +30,6 @@ public:
                 resource_->cateCodeMap);
 
         return true;
-
-
     };
 };
 

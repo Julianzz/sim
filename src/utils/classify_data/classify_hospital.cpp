@@ -759,7 +759,7 @@ bool IsGeneralHospital(const string &trecord,string &category,multimap<string::s
 		if(category.compare("ÆäËü") == 0)
 			category = "Ò½ÁÆ±£½¡:×ÛºÏÒ½Ôº:ÆäËü";
 		else
-			category = "Ò½ÁÆ±£½¡:×ÛºÏÒ½Ôº:¹ØªÒ½Ôº";
+			category = "Ò½ÁÆ±£½¡:×ÛºÏÒ½Ôº:¹Ø½Ô;
 
 		return true;
 	}

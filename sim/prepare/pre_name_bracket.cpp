@@ -24,9 +24,10 @@ public:
             const Record* record ) {
                 
     	// 去掉括号及其内部的内容
+        std::string oldName = pre_proc_data->m_format_name;
     	removeBracket(pre_proc_data->m_format_name,
     			pre_proc_data->m_raw_bracket_vec);
-        
+        std::cout<<"++++++"<<oldName<<","<<pre_proc_data->m_format_name<<std::endl;
         return true;
     };
 };
