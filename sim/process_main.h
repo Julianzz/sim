@@ -6,12 +6,16 @@
 #include "process_strategy.h"
 #include "process_batch.h"
 #include "process_sync.h"
+#include "process_output.h"
+
 #include "sim.h"
 
 #include <assert.h> 
 #include <string>
 #include <fstream>
 #include "sim.h"
+
+#define DEFAULT_WORKERS 5
 
 class PoiSimCfg;
 class Tools;
@@ -55,7 +59,11 @@ public:
     
 };
 
+class ProcessEngine;
+
 class BatchProcess:public BatchWorker {
+public:
+    friend class ProcessEngine;
     
 protected:
     BatchRecords* baseRecords_;
@@ -65,68 +73,35 @@ protected:
     size_t batchNum_;
     
     Locker writeLocker_;
+    BasicOutput* output_;
+    
+    ProcessEngine* baseEngine_;
+    ProcessEngine* incEngine_;
     
 public:
     
-    BatchProcess(ProcessStrategy& s,size_t batchNum = 1):
-        baseRecords_(NULL),
-        incRecords_(NULL),
-        strategy_(s),
-        batchNum_(batchNum) { 
-    }
-    virtual ~BatchProcess() {
-        std::cout<<"destroy batch process" <<std::endl;
-    }
+    BatchProcess(ProcessStrategy& s,size_t batchNum = DEFAULT_WORKERS );
+    virtual ~BatchProcess();
+    
     bool loadFinish();
     bool init(const std::string& base,const std::string inc );
-    void output(StrategyResult& result, bool isBase);
-    
+        
     virtual bool process() ;
     virtual bool process(const PreProcData& base, BatchRecords& records, bool isBase);
     
-    virtual bool processSim(const PreProcData& record, BatchRecords& records,
-         geo::GridResult& sameIds,bool isBase);
+    /*virtual bool processSim(const PreProcData& record, BatchRecords& records,
+         geo::GridResult& sameIds,bool isBase);*/
+             
     virtual bool processOutput(StrategyResult& result,bool isBase);
+    
+public:
+    ProcessStrategy& getStrategy() {
+        return strategy_;
+    }
+    
 public:
     DISALLOW_COPY_AND_ASSIGN(BatchProcess);
 };
 
-
-class AllMatchBatchProcess: public BatchProcess {
-    
-public:
-    AllMatchBatchProcess(ProcessStrategy& s,size_t batchNum = 1):
-        BatchProcess(s,batchNum) {} 
-    virtual ~AllMatchBatchProcess() {
-        std::cout<<"destroy batch process" <<std::endl;
-    }
-};
-
-
-class MaxMatchBatchProcess: public BatchProcess {
-public:
-    MaxMatchBatchProcess(ProcessStrategy& s,size_t batchNum = 1):
-        BatchProcess(s,batchNum) {} 
-    virtual ~MaxMatchBatchProcess() {
-        std::cout<<"destroy batch process" <<std::endl;
-    }
-public:
-    virtual bool processSim(const PreProcData& record,BatchRecords& records, 
-        geo::GridResult& sameIds, bool isBase);    
-};
-
-
-class FirstMatchBatchProcess:public BatchProcess {
-public:
-    FirstMatchBatchProcess(ProcessStrategy& s,size_t batchNum = 1):
-        BatchProcess(s,batchNum) {} 
-    virtual ~FirstMatchBatchProcess() {
-        std::cout<<"destroy batch process" <<std::endl;
-    }
-public:
-    virtual bool processSim(const PreProcData& record,BatchRecords& records, 
-        geo::GridResult& sameIds, bool isBase );  
-
-};
 
 #endif

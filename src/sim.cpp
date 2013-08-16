@@ -3244,6 +3244,7 @@ void outputSgl(const map<unsigned long long, bool> &sgl_map, bool is_base) {
 void delSameId(PreProcMap *base_map, PreProcMap *inc_map) {
 	PreProcMap::iterator it = base_map->begin();
 	for (; it != base_map->end(); ++it) {
+        //std::cout<<"find:"<<(it->first)<<std::endl;
 		if (inc_map->find(it->first) != inc_map->end()) {
 			inc_map->erase(it->first);
 		}
@@ -3256,7 +3257,7 @@ void delSameId(PreProcMap *base_map, PreProcMap *inc_map) {
 bool cmpRecord(SimTempCache &r1, SimTempCache &r2) {
 	double temp_score = r2.m_score - r1.m_score;
 
-//	cout << "1===" << temp_score << endl;
+    //cout << "1===" << temp_score << endl;
 
 	if (temp_score >= 0.005) {
 		return true;
@@ -3264,8 +3265,8 @@ bool cmpRecord(SimTempCache &r1, SimTempCache &r2) {
 		return false;
 	}
 
-//相似度相差不大
-//	cout << "2===" << r2.m_status << "\t" << r1.m_status << endl;
+    //相似度相差不大
+    //cout << "2===" << r2.m_status << "\t" << r1.m_status << endl;
 
 	if (r2.m_len_diff < r1.m_len_diff && r2.m_distance < 1000) {
 		return true;
@@ -3273,8 +3274,8 @@ bool cmpRecord(SimTempCache &r1, SimTempCache &r2) {
 		return false;
 	}
 
-//	cout << "3===" << r2.m_len_diff << "\t" << r1.m_len_diff << endl;
-//	cout << r2.m_same_tel_set.size() << "\t" << r1.m_same_tel_set.size() << endl;
+    //cout << "3===" << r2.m_len_diff << "\t" << r1.m_len_diff << endl;
+    //cout << r2.m_same_tel_set.size() << "\t" << r1.m_same_tel_set.size() << endl;
 
 	if (r2.m_same_tel_set.size() > 0 && r1.m_same_tel_set.size() == 0
 			&& r2.m_distance < 1000) {
@@ -3284,7 +3285,7 @@ bool cmpRecord(SimTempCache &r1, SimTempCache &r2) {
 		return false;
 	}
 
-//	cout << "4===" << r2.m_len_diff << "\t" << r1.m_len_diff << endl;
+    //cout << "4===" << r2.m_len_diff << "\t" << r1.m_len_diff << endl;
 
 	if (r2.m_addr_sim > r1.m_addr_sim && r2.m_addr_sim >= 0.52) {
 		return true;
@@ -3292,32 +3293,36 @@ bool cmpRecord(SimTempCache &r1, SimTempCache &r2) {
 		return false;
 	}
 
-//	cout << "5===" << r2.m_len_diff << "\t" << r1.m_len_diff << endl;
+    //cout << "5===" << r2.m_len_diff << "\t" << r1.m_len_diff << endl;
 
 	if (r2.m_len_diff < r1.m_len_diff) {
 		return true;
 	} else if (r1.m_len_diff < r2.m_len_diff) {
 		return false;
 	}
+    //cout<<" 5== " <<r2.m_distance<<endl;
 
 	if (r2.m_distance < r1.m_distance) {
 		return true;
 	} else if (r1.m_distance < r2.m_distance) {
 		return false;
 	}
-
+    //cout<<"6== " <<endl;
+    
 	if (r2.m_addr_sim > r1.m_addr_sim) {
 		return true;
 	} else if (r1.m_addr_sim < r2.m_addr_sim) {
 		return false;
 	}
-
+    //cout<<"7== " <<endl;
+    
 	if (r2.m_same_tel_set.size() > 0 && r1.m_same_tel_set.size() == 0) {
 		return true;
 	} else if (r1.m_same_tel_set.size() > 0 && r2.m_same_tel_set.size() == 0) {
 		return false;
 	}
-
+    //cout<<"8== "<<","<< r2.m_is_base <<","<< r1.m_is_base <<endl;
+    //cout<<"8== "<<","<<r2.m_status <<"," <<r1.m_status <<endl;
 	if (r2.m_is_base && r1.m_is_base) {
 		if (r2.m_status == 0 && r1.m_status == 1) {
 			return true;
@@ -3325,25 +3330,25 @@ bool cmpRecord(SimTempCache &r1, SimTempCache &r2) {
 			return false;
 		}
 	}
-
+    //cout<<"9=="<<endl;
 	if (r2.m_is_base && !r1.m_is_base) {
 		return true;
 	} else if (!r2.m_is_base && r1.m_is_base) {
 		return false;
 	}
-
+    //cout<<"10=="<<endl;
 	if (r2.m_base_id < r1.m_base_id) {
 		return true;
 	} else if (r1.m_base_id < r2.m_base_id) {
 		return false;
 	}
-
+    //cout<<"11=="<<endl;
 	if (r2.m_inc_id < r1.m_inc_id) {
 		return true;
 	} else if (r1.m_inc_id < r2.m_inc_id) {
 		return false;
 	}
-
+    //cout<<"12==="<<endl;
 	return false;
 }
 
@@ -3505,7 +3510,7 @@ void poiSimAll(const PreProcData *pre_proc_data, const PreProcMap *data_map,
 		map<unsigned long long, bool> &base_sgl_map,
 		map<unsigned long long, bool> &inc_sgl_map,
 		pthread_mutex_t &prepare_output_mutex) {
-
+    //std:cout<<"size_____"<<id_set->size()<<std::endl;
 	set<unsigned long long>::const_iterator it = id_set->begin();
 	PreProcMap::const_iterator data_it;
 	for (; it != id_set->end(); ++it) {
@@ -3519,10 +3524,9 @@ void poiSimAll(const PreProcData *pre_proc_data, const PreProcMap *data_map,
 				print(sim_temp_cache);
 				pthread_mutex_unlock(&prepare_output_mutex);
 			}
-
-			if (sim_temp_cache->m_score > poi_sim_cfg->m_poisim_all_output_th) {
+			//if (sim_temp_cache->m_score > poi_sim_cfg->m_poisim_all_output_th) {
 				outputResult(sim_temp_cache, is_base, prepare_output_mutex);
-			}
+            //}
 		}
 	}
 }
@@ -3541,6 +3545,7 @@ void poiSimMax(const PreProcData *pre_proc_data, const PreProcMap *data_map,
 	for (; it != id_set->end(); ++it) {
 		data_it = data_map->find(*it);
 		if (data_it != data_map->end()) {
+            
 			poiSim(&(data_it->second), pre_proc_data, resource, poi_sim_cfg,
 					rule_node_vec, temp_cache, is_base);
 			compareSimScore(sim_temp_cache, temp_cache);
@@ -3553,9 +3558,9 @@ void poiSimMax(const PreProcData *pre_proc_data, const PreProcMap *data_map,
 		pthread_mutex_unlock(&prepare_output_mutex);
 	}
 
-	if (sim_temp_cache->m_score > poi_sim_cfg->m_poisim_all_output_th) {
+	//if (sim_temp_cache->m_score > poi_sim_cfg->m_poisim_all_output_th) {
 		outputResult(sim_temp_cache, is_base, prepare_output_mutex);
-	}
+        //}
 
 	delete temp_cache;
 }
@@ -3567,7 +3572,7 @@ void poiSim(const PreProcData *pre_proc_data, const PreProcMap *data_map,
 		map<unsigned long long, bool> &base_sgl_map,
 		map<unsigned long long, bool> &inc_sgl_map,
 		pthread_mutex_t &prepare_output_mutex) {
-
+    
 	int level = 0;
 	set<unsigned long long> temp_id_set;
 	if (pre_proc_data->m_type == "271020" || pre_proc_data->m_type == "271016"
@@ -3583,7 +3588,7 @@ void poiSim(const PreProcData *pre_proc_data, const PreProcMap *data_map,
 	if (!is_base) {
 		temp_id_set.erase(pre_proc_data->m_id);
 	}
-
+    //std::cout<<pre_proc_data->m_id<<","<<temp_id_set.size()<<std::endl;
 	poi_sim_func(pre_proc_data, data_map, &temp_id_set, resource, poi_sim_cfg,
 			rule_node_vec, is_base, sim_temp_cache, base_sgl_map, inc_sgl_map,
 			prepare_output_mutex);
@@ -3599,7 +3604,7 @@ void poiSim(PreProcMap::const_iterator &it, PreProcMap::const_iterator &end_it,
 		pthread_mutex_t &prepare_output_mutex) {
 
 	SimTempCache *sim_temp_cache = new SimTempCache();
-
+    
 	// 相似度计算
 	PreProcMap::const_iterator temp_it;
 	while (it != end_it) {
@@ -3644,7 +3649,6 @@ void poiSim(PreProcMap *base_map, PreProcMap *inc_map, Resource *resource,
 		cout << "[Err]: poi sim cfg has some err" << endl;
 		return;
 	}
-
 	// 删除inc中的baseid
 	if (poi_sim_cfg->m_del_same_id) {
 		delSameId(base_map, inc_map);
@@ -3679,6 +3683,10 @@ void poiSim(PreProcMap *base_map, PreProcMap *inc_map, Resource *resource,
 		makeIdf(base_map->size() + inc_map->size(), resource->idf,
 				resource->max_idf, resource->min_idf);
 	}
+    
+	cout << "max idf:" << resource->max_idf << "\t" << resource->min_idf << endl;
+	cout << "idf init:" << resource->idf.size() << endl;
+    cout<<  "map size "<< base_map->size() <<", "<< inc_map->size() << endl;
 
 	makeUselessTel(resource->uselessTelMap,
 			poi_sim_cfg->m_useless_tel_threshold);

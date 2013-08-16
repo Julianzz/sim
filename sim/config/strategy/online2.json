@@ -16,7 +16,7 @@
     "base_inc_sim_func": "poiSimMax",
     "inc_inc_sim_func": "poiSimAll",
     
-    "use_local_idf": true,
+    "use_local_idf": false,
         
     "sim_rules": [
         
@@ -37,7 +37,7 @@
                 "train_recall_distance":2000,
                 "train_reliable_distance":500,
                 "default_recall_distance":3000,
-                "default_reliable_distance":1000,
+                "default_reliable_distance":100,
                 "addr_sim":0.52
             } },
             
@@ -122,10 +122,65 @@
     ],
 
     "base_rules": [
-        {  "method":"FullPre", "params":{ } }      
+        {  "method":"InitPre", "params":{ } },
+        {  "method":"ClassifyPre", "params":{ } },
+        {  "method":"TelephonePre", "params":{ } },
+        {  "method":"AddressPre", "params":{ } },
+        {  "method":"TypePre", "params":{ } },
+        {  "method":"NamePre", "params":{ } },
+        {  "method":"NameDingCanPre", "params":{ } },
+        {  "method":"NameGovPre", "params":{ } },
+        {  "method":"NameTrainPre", "params":{ } },
+        {  "method":"RemovePuncPre", "params":{ } },
+        {  "method":"NameBracketPre", "params":{ } },        
+        {  "method":"NameTailPre", "params":{ } },
+        {  "method":"WordSplitPre", "params":{ } },
+        {  "method":"NameTransPre", "params":{ } },
+        {  "method":"MergeWordPre", "params":{ } },
+        {  "method":"WordTransPre", "params":{ } },
+        {  "method":"RecordPre", "params":{ } },
+        {  "method":"AddBracketNamePre", "params":{ } },
+        {  "method":"FormatVecPre", "params":{ } },
+        {  "method":"DpMarkPre", "params":{ } },
+        {  "method":"NameFilterPre", "params":{ } }, 
+        {  "method":"NameAddressPre", "params":{ } },
+        {  "method":"MergeWordPre", "params":{ } },     
+        {  "method":"UnlackWordPre", "params":{ } },      
+        {  "method":"BigramPre", "params":{ } },
+        {  "method":"SpecialPre", "params":{ } },    
+        {  "method":"NamesSetPre", "params":{ } },
+        {  "method":"GridWordPre", "params":{ } },
+        {  "method":"LastPre", "params":{ } }               
     ],
 
     "inc_rules": [
-        {  "method":"FullPre", "params":{ } }
+        {  "method":"InitPre", "params":{ } },
+        {  "method":"ClassifyPre", "params":{ } },
+        {  "method":"AddressPre", "params":{ } },
+        {  "method":"TypePre", "params":{ } },
+        {  "method":"NamePre", "params":{ } },
+        {  "method":"NameDingCanPre", "params":{ } },
+        {  "method":"NameGovPre", "params":{ } },
+        {  "method":"NameTrainPre", "params":{ } },
+        {  "method":"RemovePuncPre", "params":{ } },
+        {  "method":"NameBracketPre", "params":{ } },        
+        {  "method":"NameTailPre", "params":{ } },
+        {  "method":"WordSplitPre", "params":{ } },
+        {  "method":"NameTransPre", "params":{ } },
+        {  "method":"MergeWordPre", "params":{ } },
+        {  "method":"WordTransPre", "params":{ } },
+        {  "method":"RecordPre", "params":{ } },
+        {  "method":"AddBracketNamePre", "params":{ } },
+        {  "method":"FormatVecPre", "params":{ } },
+        {  "method":"DpMarkPre", "params":{ } },
+        {  "method":"NameFilterPre", "params":{ } }, 
+        {  "method":"NameAddressPre", "params":{ } },
+        {  "method":"MergeWordPre", "params":{ } },     
+        {  "method":"UnlackWordPre", "params":{ } },      
+        {  "method":"BigramPre", "params":{ } },
+        {  "method":"SpecialPre", "params":{ } },    
+        {  "method":"NamesSetPre", "params":{ } },
+        {  "method":"GridWordPre", "params":{ } },
+        {  "method":"LastPre", "params":{ } } 
     ] 
 }

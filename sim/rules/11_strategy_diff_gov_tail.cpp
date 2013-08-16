@@ -48,6 +48,7 @@ public:
     							&& base_data->m_name_vec[0]
     									!= inc_data->m_name_vec[0])) {
     				return setResult("diff_gov_tail", -1.0, true, sim_temp_cache);
+                    
     			} else if (base_data->m_sub_type != inc_data->m_sub_type
     					&& base_data->m_sub_type != "2699"
     					&& inc_data->m_sub_type != "2699"

@@ -113,6 +113,7 @@ public:
         resource_ = &( ProcessResource::instance().resource() );
         begin_ = false;
         std::cout<<"init begin_" <<begin_<<std::endl;
+        cout_ = 0;
     }
     ~BatchRecords() {
         delete mutexInput_;
@@ -142,6 +143,12 @@ public:
     PreProcData* fetch( const geo::GridItem& key );
     bool search( const PreProcData& data, geo::GridResult*result);
 
+    void info() {
+        std::cout<<"+++++records info+++++ "<<std::endl;
+        std::cout<<"+++:"<<records.size()<<std::endl;
+        std::cout<<"+++++"<<"end"<<std::endl;
+    }
+    
 public:
     
     DataRecord records;
@@ -157,6 +164,9 @@ public:
     
     Locker readLock_;
     
+    size_t cout_;
+private: 
+    DISALLOW_COPY_AND_ASSIGN(BatchRecords);
 };
 
 class MutexBatchRecords {

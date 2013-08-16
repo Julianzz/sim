@@ -1,5 +1,6 @@
 #include "process_strategy.h"
 #include "process_main.h"
+#include "process_result.h"
 
 #include "tools.h"
 #include "prepare.h"
@@ -49,14 +50,15 @@ void ProcessStrategy::sim( const Record& base, const Record& inc,
 //main compare process function,invoke fule to process
 //TODO should seperate process to unit,deal,score,etc.
 //     maybe should add some different process
-void ProcessStrategy::sim(const PreProcData *baseData, const PreProcData *incData, 
+void ProcessStrategy::sim(const PreProcData *baseData, 
+        const PreProcData *incData, 
         StrategyResult *results ) {
-             
-    SimTempCache *tempCache = &(results->simCache);
+            
 	std::vector<BaseRule*>::iterator iter = processRules_.begin();
 	for (; iter != processRules_.end(); ++iter) {
-        bool ret = (*iter)->process( baseData,incData,tempCache);
+        bool ret = (*iter)->process( baseData,incData,results);
         //std::cout<<"process:"<<(*iter)->getName()<<","<<ret<<std::endl;
+        results->setRuleInfo((*iter)->getName(), ret );
         if( ret ) {
             return ;
         }
@@ -87,8 +89,34 @@ bool ProcessStrategy::init( const string& fileName,OnlineProcess& process ) {
     parser_ = new IndexParser();
     parser_->init();
     
+    dump();
     return true; 
 
+}
+
+void ProcessStrategy::dump() {
+    std::cout<< "++++++++++++strategy info is ++++++++++++++ "<<std::endl;
+    
+    /*
+	string m_source_dir; 
+	bool m_use_local_idf;
+	bool m_debug; 
+	bool m_find_in_self; 
+	bool m_del_same_id; 
+
+	bool m_out_base_sgl; 
+	bool m_out_inc_sgl; 
+
+	double m_name_same_weight; 
+	double m_name_sub_same_weight;
+	double m_name_diff_weight; 
+	double m_name_sub_diff_weight; 
+
+	double m_poisim_all_output_th;
+
+	int m_useless_tel_threshold; 
+	int m_thread_num; 
+    */
 }
 
 static const char* params[] =  { 
@@ -126,11 +154,13 @@ bool ProcessStrategy::initSim() {
 	simConfig_.m_out_inc_sgl = simConfig["out_inc_sgl"].asBool();
 
 	simConfig_.m_name_same_weight = simConfig["name_same_weight"].asDouble();
-	simConfig_.m_name_sub_same_weight = simConfig["sub_same_weight"].asDouble();
+	simConfig_.m_name_sub_same_weight = simConfig["name_sub_same_weight"].asDouble();
 	simConfig_.m_name_diff_weight = simConfig["name_diff_weight"].asDouble();
 	simConfig_.m_name_sub_diff_weight = simConfig["name_sub_diff_weight"].asDouble();
 	simConfig_.m_poisim_all_output_th = simConfig["poisim_all_output_th"].asDouble();
 	simConfig_.m_useless_tel_threshold = simConfig["useless_tel_threshold"].asDouble();    
+    
+    useLocalIdf_ = simConfig["use_local_idf"].asBool();
     
     std::cout<<simConfig_.m_thread_num<<std::endl;
     std::cout<<simConfig_.m_use_local_idf<<std::endl;

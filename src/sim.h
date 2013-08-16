@@ -476,6 +476,7 @@ void computeScore(const PreProcData *base_data, const PreProcData *inc_data,
 //==================================================
 // 比较相似度大小
 //==================================================
+bool cmpRecord(SimTempCache &r1, SimTempCache &r2);
 void compareSimScore(SimTempCache *cur_max_cache, SimTempCache *temp_cache);
 
 //==================================================

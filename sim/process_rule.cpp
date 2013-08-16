@@ -7,6 +7,7 @@
 #include "sim.h"
 #include "common.h"
 
+
 std::map<std::string,BaseRule*> RuleRegister::rules_;
 void RuleRegister::addRule(const std::string& name, BaseRule* rule ) {
     rule->setName(name);

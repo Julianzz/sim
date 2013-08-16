@@ -239,8 +239,72 @@ public:
 		m_fendian = "";
 	}
 
-	PreProcData() {
-		clear();
+	PreProcData() :m_is_null(true),
+		m_status(0),
+		m_id(0),
+		m_lat(0.0),
+		m_lng(0.0),
+		//m_name("");
+		//m_addr("");
+		//m_split_addr = "";
+		m_addr_level(100),
+		//m_type = "";
+		//m_source = "";
+		//m_province = "";
+		//m_city = "";
+		//m_district = "";
+		//m_tel_set.clear();
+
+		// preproc
+		//m_accurate_type = "";
+		//m_accurate_keyword = "";
+		//m_accurate_kw_vec.clear();
+		//m_accurate_kw_set.clear();
+
+		//m_format_name = ""; // format name string
+		//m_del_punc_name = ""; // del all punc from name
+		m_del_punc_name_len(0),
+		//m_bigram_name = "";
+		//m_raw_bracket_vec.clear(); // after format, the deleted string that in brackets
+
+		//m_name_vec.clear(); // wordsplit result
+		//m_bracket_vec.clear();
+		//m_name_set.clear(); // wordsplit result in set
+		//m_bracket_set.clear();
+
+		//m_main_type = "";
+		//m_sub_type = "";
+		//m_soso_type = "";
+		//m_soso_main_type = "";
+		//m_soso_sub_type = "";
+		//m_accurate_main_type = "";
+		//m_accurate_sub_type = "";
+
+		//m_addrsim_xzqh_map.clear();
+		//m_addrsim_road_map.clear();
+		//m_addrsim_community_set.clear();
+		//m_addrsim_poi_set.clear();
+		//m_addrsim_hn_set.clear();
+		//m_addrsim_home_set.clear();
+		//m_addrsim_floor_set.clear();
+
+		//m_num_name_set.clear();
+		//m_door_set.clear();
+		//m_dpmark_set.clear();
+
+		m_obj_max_distance(0.0),
+		//m_obj_name_set.clear();
+		//m_gov_tail = "";
+		//m_smname_group_set.clear();
+		//m_unlack_word_set.clear();
+		//m_grid_name_set.clear();
+
+		m_gov_level(0)
+		//m_gov_lvl_kw = "";
+
+		//m_dizhi = "";
+		//m_fendian = "";
+    {
 	}
 };
 
@@ -544,8 +608,81 @@ public:
 		m_score = -1.0;
 	}
 
-	SimTempCache() {
-		clear();
+	SimTempCache():
+		m_is_null(true),
+		m_status(0),
+		m_is_base(false),
+        
+		m_is_mode_chn(false),
+		m_is_mode_self(false),
+
+		m_base_id(0),
+		m_inc_id(0),
+
+		//m_base_name = "";
+		//m_inc_name = "";
+
+		//m_rule_result_map.clear();
+
+		m_distance (9999.0),
+		m_addr_sim (0.0),
+		//m_obj_name_set.clear();
+		m_max_obj_distance (9999.0),
+		//m_spec_obj_name_set.clear();
+		m_max_spec_obj_distance (9999.0),
+		m_len_diff (999),
+		m_name_is_include (false),
+
+		//m_addr_sim_value.clear();
+
+		//m_same_tel_set.clear();
+		//m_same_type_vec.clear();
+		//m_same_type_set.clear();
+		//m_same_type_str = "";
+
+		//m_same_words_vec.clear();
+		//m_sub_same_words_base_vec.clear();
+		//m_sub_same_words_inc_vec.clear();
+		//m_diff_words_base_vec.clear();
+		//m_diff_words_inc_vec.clear();
+		//m_sub_diff_words_base_vec.clear();
+		//m_sub_diff_words_inc_vec.clear();
+
+		//m_bracket_same_words_vec.clear();
+		//m_bracket_diff_words_base_vec.clear();
+		//m_bracket_diff_words_inc_vec.clear();
+
+		// accurate keyword
+		//m_accurate_kw_base_vec.clear();
+		//m_accurate_kw_inc_vec.clear();
+
+		// name similarity
+		m_name_same_score (0.0),
+		m_name_sub_same_score (0.0),
+		m_name_diff_score (0.0),
+		m_name_sub_diff_score (0.0),
+		m_bracket_score(0.0),
+
+		// base score
+		m_name_score (0.0),
+		m_tel_score  (0.0),
+		m_addr_score ( 0.0),
+		m_type_score (0.0),
+		m_distance_score (0.0),
+
+		// special score
+		m_accurate_type_score (0.0),
+		m_tail_score (0.0), // if one in endswith other
+		m_spec_score (0.0),
+		m_in_bracket_score ( 0.0),
+		m_same_num_score (0.0),
+		m_area_sub_poi_score (0.0),
+		m_include_addr_tel_score (0.0),
+
+		m_total_same_score (0.0),
+		m_total_diff_score (0.0),
+		m_score (-1.0) {
+
 	}
 };
 

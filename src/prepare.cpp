@@ -121,7 +121,7 @@ void getRecFromCsv(const vector<string> &vec_data, Record *record,
 			record->m_status = 0;
 		}
 	}
-
+    
 	record->m_is_null = false;
 }
 
@@ -267,8 +267,6 @@ void makePreProcFromRec(const Record *record, PreProcData *pre_proc_data,
 			|| pre_proc_data->m_main_type == "24") {
 		formatNumName(pre_proc_data->m_format_name);
 	}
-
-	cout << pre_proc_data->m_format_name << endl;
 
 	// 去掉括号及其内部的内容
 	removeBracket(pre_proc_data->m_format_name,

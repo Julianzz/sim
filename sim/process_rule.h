@@ -6,7 +6,9 @@
 #include <assert.h>
 #include "json/json.h"
 #include "process_resource.h"
+#include "process_result.h"
 
+class StrategyResult;
 class PreProcData;
 class SimTempCache;
 class Resource;
@@ -36,7 +38,11 @@ public:
     virtual bool process(const PreProcData *base_data, 
             const PreProcData *inc_data,
     		SimTempCache *sim_temp_cache) = 0;
-            
+
+    virtual bool process( const PreProcData *base_data, 
+        const PreProcData *inc_data,
+        StrategyResult *results ) = 0;
+                  
     virtual bool processRecord(PreProcData *baseData,
             const Record *record ) = 0;
     
@@ -72,6 +78,14 @@ public:
                 assert( false );
                 return false;
             }
+            
+    virtual bool process( const PreProcData *base_data, 
+        const PreProcData *inc_data,
+        StrategyResult *results ){
+        SimTempCache *tempCache = &(results->simCache);
+        return this->process(base_data, inc_data, tempCache );
+    }
+    
     virtual bool processRecord(PreProcData *baseData,
             const Record *record ) {
         assert( false );

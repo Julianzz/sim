@@ -1,4 +1,5 @@
 #include "process_main.h"
+#include "process_engine.h"
 
 #include "tools.h"
 #include "prepare.h"
@@ -6,6 +7,7 @@
 #include "init.h"
 #include "sim.h"
 #include "common.h"
+
 
 OnlineProcess::OnlineProcess(const std::string& name ):fileName_(name) {
 }
@@ -101,7 +103,7 @@ bool OnlineProcess::batchProcess( const std::string& strategy,
         std::cout<<"init batch woker error" <<std::endl;;
         return false;
     }
-    ThreadBatchLoad loader(2,&batchWorker );
+    ThreadBatchLoad loader(DEFAULT_WORKERS,&batchWorker );
     ret = loader.start();
     if( !ret ) {
         std::cout<<"compute sim error " <<std::endl;
@@ -110,6 +112,29 @@ bool OnlineProcess::batchProcess( const std::string& strategy,
     return true;
 }
 
+
+BatchProcess::BatchProcess(ProcessStrategy& s,size_t batchNum ):
+    baseRecords_(NULL),
+    incRecords_(NULL),
+    strategy_(s),
+    batchNum_(batchNum) { 
+    output_ =  new MutexStdOutput();
+    incEngine_  = new AllMatchBatchEngine(*this);
+    baseEngine_ = new MaxMatchBatchEngine(*this);
+}
+
+BatchProcess::~BatchProcess() {
+    if ( output_ ) {
+        delete output_;
+    }
+    if ( baseEngine_ ) {
+        delete baseEngine_;
+    }
+    if ( incEngine_ ) {
+        delete incEngine_;
+    }
+    //std::cout<<"destroy batch process" <<std::endl;
+}
 
 bool BatchProcess::loadFinish() {
     Resource& resource_ = ProcessResource::instance().resource() ;
@@ -121,6 +146,11 @@ bool BatchProcess::loadFinish() {
                  resource_.min_idf );
 	}
 	makeUselessTel(resource_.uselessTelMap, strategy_.uselessTelThreshold() );
+    
+    std::cout <<"-----output " <<std::endl;
+	std::cout << "max idf:" << resource_.max_idf << "\t" << resource_.min_idf << std::endl;
+	std::cout << "idf init:" << resource_.idf.size() << std::endl;
+    std::cout << "idf size:" <<baseRecords_->size() <<"," <<incRecords_->size()<<std::endl;
     return true;
 }
 
@@ -147,10 +177,11 @@ bool BatchProcess::init(const std::string& base,const std::string inc ) {
     
     ThreadBatchLoad baseLoader(batchNum_, baseRecords_);
     baseLoader.start();
+    baseRecords_->info();
     
     ThreadBatchLoad incLoader(batchNum_, incRecords_);
     incLoader.start();
-    
+    incRecords_->info();
     loadFinish();
     
     return true;
@@ -160,13 +191,13 @@ bool BatchProcess::process() {
 
     std::cout<<"beigin to process" <<std::endl;
     while( true ) {
-        PreProcData* base = baseRecords_->next();
+        PreProcData* base = incRecords_->next();
         if( base == NULL ) {
             return true;
         }
-        process( *base, *incRecords_,true);
+        process( *base, *baseRecords_ ,true);
         if( strategy_.findInSelf()) {
-            process(*base, *baseRecords_,false );
+            process(*base, *incRecords_,false );
         }
     }
     return true;
@@ -179,78 +210,18 @@ bool BatchProcess::process(const PreProcData& base, BatchRecords& records, bool 
 	if (!isBase) {
 		sameIds.erase(base.m_id);
 	}
-    
-    return processSim(base, records, sameIds,isBase );
-    
-}
-bool BatchProcess::processSim(const PreProcData& base, BatchRecords& records,
-        geo::GridResult& sameIds, bool isBase) {
-            
-    geo::GridResult::iterator iter =  sameIds.begin(); 
-    for( ;iter != sameIds.end(); iter++ ) {
-        PreProcData* inc = records.fetch(*iter) ;
-        if ( inc == NULL ) {
-            continue ;
-        }
-        
-        StrategyResult result;
-        strategy_.sim( &base,inc, &result );
-        
-        processOutput(result,isBase );
+    if ( isBase ) { 
+        return baseEngine_->processSim(base, records, sameIds,isBase );
+    } else {
+        return incEngine_->processSim(base, records, sameIds, isBase );
     }
     return true;
 }
-
-void BatchProcess::output(StrategyResult& result, bool isBase ) {
-    SimTempCache& simTmpCache = result.simCache; 
-    
-	if (isBase) {
-		cout << "[rel]:" <<simTmpCache.m_base_id << "\t"
-			<<simTmpCache.m_inc_id << "\t" <<simTmpCache.m_score
-			<< "\t" <<simTmpCache.m_len_diff << "\t"
-			<<simTmpCache.m_addr_sim << "\t"
-			<<simTmpCache.m_distance << "\t"
-			<<simTmpCache.m_same_tel_set.size() << "\t" << "base"
-			<< "\t" <<simTmpCache.m_status << "\n";
-	} else {
-		cout << "[rel]:" <<simTmpCache.m_base_id << "\t"
-			<<simTmpCache.m_inc_id << "\t" <<simTmpCache.m_score
-			<< "\t" <<simTmpCache.m_len_diff << "\t"
-			<<simTmpCache.m_addr_sim << "\t"
-			<<simTmpCache.m_distance << "\t"
-			<<simTmpCache.m_same_tel_set.size() << "\t" << "increase"
-			<< "\t" <<simTmpCache.m_status << "\n";
-	}
-}
-
 //
 bool BatchProcess::processOutput(StrategyResult& result,bool isBase) {
-    ScopeLocker locker(writeLocker_) ;
     SimTempCache& simTmpCache = result.simCache; 
-    if (simTmpCache.m_score > strategy_.getOutputThreshold() ) {
-        output(result,isBase);
-    }
-    return true;
-}
-
-
-//will find the max matches
-bool MaxMatchBatchProcess::processSim(const PreProcData& base,BatchRecords& records,
-         geo::GridResult& sameIds,bool isBase ) {
-             
-    StrategyResult maxResult ;
-    geo::GridResult::iterator iter =  sameIds.begin();
-    for( ;iter != sameIds.end(); iter++ ) {
-        PreProcData* inc = records.fetch(*iter) ;
-        if ( inc == NULL ) {
-            continue ;
-        }
-        
-        StrategyResult result;
-        strategy_.sim( &base,inc, &result );
-        compareSimScore(&(result.simCache), &(maxResult.simCache));
-    }   
-    processOutput(maxResult, isBase);
-    
+    //if (simTmpCache.m_score > strategy_.getOutputThreshold() ) {
+        output_->output(result,isBase);
+        //}
     return true;
 }

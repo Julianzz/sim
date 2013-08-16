@@ -64,9 +64,9 @@ PreProcData* BatchRecords::fetch( const geo::GridItem& key ) {
 PreProcData* BatchRecords::next( ) {
     
     ScopeLocker locker(readLock_);
-    //std::cout<<"first  "<<begin_ <<std::endl;
-    if( !begin_ ) {
-       // std::cout<< "init" <<std::endl;
+    cout_++;
+
+    if( ! begin_ ) {
         begin_ = true;
         cur_ = records.begin();
     }
@@ -78,9 +78,8 @@ PreProcData* BatchRecords::next( ) {
         data = NULL;
     }else {
         data = &(cur_->second);
+        cur_++;
     }
-    cur_++;
-    //readLock_.unlock();
     return data;
 }
 

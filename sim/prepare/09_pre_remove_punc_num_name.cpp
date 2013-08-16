@@ -46,8 +46,8 @@ public:
     		formatNumName(pre_proc_data->m_format_name);
     	}
         
-        std::cout<<"====="<<oldName<<","<<pre_proc_data->m_del_punc_name<<","<<
-             pre_proc_data->m_format_name <<std::endl;
+        //std::cout<<"====="<<oldName<<","<<pre_proc_data->m_del_punc_name<<","<<
+        //     pre_proc_data->m_format_name <<std::endl;
         
         return true;
     };

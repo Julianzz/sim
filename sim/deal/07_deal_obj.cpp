@@ -18,6 +18,7 @@ public:
     virtual bool process(const PreProcData *base_data, 
             const PreProcData *inc_data,
     		SimTempCache *sim_temp_cache) {
+                
     	set_intersection(base_data->m_obj_name_set.begin(),
     			base_data->m_obj_name_set.end(), inc_data->m_obj_name_set.begin(),
     			inc_data->m_obj_name_set.end(),

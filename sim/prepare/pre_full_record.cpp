@@ -154,8 +154,6 @@ public:
     		formatNumName(pre_proc_data->m_format_name);
     	}
 
-    	cout << pre_proc_data->m_format_name << endl;
-
     	// 去掉括号及其内部的内容
     	removeBracket(pre_proc_data->m_format_name,
     			pre_proc_data->m_raw_bracket_vec);

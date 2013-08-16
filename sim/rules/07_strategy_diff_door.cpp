@@ -10,6 +10,7 @@
 static const char* params[] =  { "distance" };
 
 class DiffDoorStrateyRule : public ResourceRule<DiffDoorStrateyRule> {
+    
 private:
 	double m_distance;
     
@@ -22,7 +23,6 @@ public:
                 return false;
              }
         }
-        
         m_distance = items["distance"].asDouble();
         return true;
     }

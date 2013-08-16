@@ -96,14 +96,15 @@ bool OnlineProcess::initResource() {
 	}
 
 	// idf mapping
-
+    
 	tempPath = path + std::string("/idf.dic");
 	if (load(tempPath, resource_.idf, "\t", false) == -1) {
 		std::cout << "idf init failed." << std::endl;
 		return false;
 	}
 	findMaxMin(resource_.idf, resource_.max_idf, resource_.min_idf);
-	cout << "max idf:" << resource_.max_idf << "\t" << resource_.min_idf
+	
+    cout << "max idf:" << resource_.max_idf << "\t" << resource_.min_idf
 			<< endl;
 	cout << "idf init:" << resource_.idf.size() << endl;
 

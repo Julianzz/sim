@@ -154,17 +154,4 @@ public:
     }
 };
 
-
-class ResultItem {
-
-};
-
-class BasicOutput {
-public:
-    BasicOutput();
-    virtual ~BasicOutput() {};
-};
-
-
-
 #endif /* end of include guard: PROCESS_READER_H_EY2MOZED */

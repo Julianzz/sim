@@ -14,30 +14,8 @@ class PoiSimCfg;
 class Tools;
 class OnlineProcess;
 class BaseRule;
-    
-struct StrategyResult {
-    
-    SimTempCache simCache;
-    Json::Value results;
-    Json::Value debugInfo;
-    Record base;
-    Record inc;
-    
-    void init( const PreProcData *base_data, const PreProcData *inc_data ,bool isBase) {
-    	simCache.m_base_id = base_data->m_id;
-    	simCache.m_inc_id = inc_data->m_id;
-    	simCache.m_base_name = base_data->m_name;
-    	simCache.m_inc_name = inc_data->m_name;
-    	simCache.m_status = base_data->m_status;
-    	simCache.m_is_base = isBase;
-    }
-    
-    void dump() {
-        std::cout<<" ++++++++ output info is ++++++ " <<std::endl;
-        print(&simCache);
-    }
-};
-    
+class StrategyResult;    
+
 class ProcessStrategy {
     
 public:
@@ -102,6 +80,8 @@ public:
     Parser* parser() {
         return parser_;
     }
+    
+    void dump();
     
 private:
     bool initSim();

@@ -1,6 +1,6 @@
 {
 	"thread_num": 4,
-	"use_local_idf": false,
+	"use_local_idf": true,
 	"source_dir": "../source",
     "wordsplit_dic":[ 
             "word.name.dic",

@@ -1,0 +1,38 @@
+28269618 [DistanceStratey]
+
+2915975 [ChainStratey]
+1620303 [DiffNameStratey]
+1622237 [DiffTypeStratey]
+1115425 [DiffNumStratey]
+
+
+804987 [DiffGovLevelStratey]
+740399 [DiffDoorStratey]
+483085 [DiffDpMarkStratey]
+
+
+331070 [UnlackWordStratey]
+203668 [SameNameStratey]
+171195 [AtmStratey]
+159225 []
+
+
+90468 [DiffFendianStratey]
+68529 [TypeNameStratey]
+46211 [DiffAccurateKeywordStrategy]
+16374 [SpecSourceStratey]
+
+
+24278 [DiffParkStratey]
+24426 [BridgeStratey]
+13254 [DiffBuidTypeStratey]
+
+
+9289 [NotFreqStratey]
+6778 [RoadStratey]
+6055 [DiffGovTailStratey]
+4294 [DiffWordUnlackStratey]
+
+
+313 [AliasStrategy]
+80 [DiffDizhiStratey]

@@ -21,8 +21,9 @@ USER_MARCOS := __PTHREADS_MUTEXES__ __linux__ __PTHREADS__ EPOLL _DEBUG CONVERT_
 LIBS 		:= pthread  json
 #LIBS_PATH	:= ../lib 
 
-CFLAGS = -O2 -L$(DEPS_DIR)/lib -Wall -g
+CFLAGS =  -O2 -L$(DEPS_DIR)/lib -Wall -g  
 #CFLAGS = -g
+LDFLAGS =  #-ltcmalloc 
 CC = g++  
 
 %.o: %.cpp
@@ -32,7 +33,7 @@ CC = g++
 	$(CC) $(CFLAGS) $(addprefix -D,$(USER_MARCOS)) $(addprefix -I, $(HEADERS))  -c $< -o $@
 
 $(OUTPUT):$(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(addprefix -L,$(LIBS_PATH)) $(addprefix -l,$(LIBS))
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS) $(addprefix -L,$(LIBS_PATH)) $(addprefix -l,$(LIBS))
  
 
 clean:

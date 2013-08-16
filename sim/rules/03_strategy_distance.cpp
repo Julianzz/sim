@@ -62,7 +62,7 @@ public:
     virtual bool process(const PreProcData *base_data, 
             const PreProcData *inc_data,
     		SimTempCache *sim_temp_cache) {
-                
+                        
     	if (base_data->m_type == "271020"
     			&& base_data->m_type == inc_data->m_type) {
     		// airport
