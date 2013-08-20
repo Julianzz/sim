@@ -19,7 +19,9 @@ struct StrategyResult {
     void setNotNull() {
         simCache.m_is_null = false;
     }
-    
+    bool isNull() {
+        return simCache.m_is_null;
+    }
     std::string outputRule(bool isFull = false) const ;
 };
 

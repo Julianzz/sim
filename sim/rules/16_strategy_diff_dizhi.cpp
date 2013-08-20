@@ -18,7 +18,7 @@ public:
     virtual bool process(const PreProcData *base_data, 
             const PreProcData *inc_data,
     		SimTempCache *sim_temp_cache) {
-                
+        
     	if (startswith(sim_temp_cache->m_same_type_str, "28")) {
     		if (base_data->m_dizhi != "" && inc_data->m_dizhi != ""
     				&& base_data->m_dizhi != inc_data->m_dizhi) {

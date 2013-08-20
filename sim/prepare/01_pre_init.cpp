@@ -43,7 +43,6 @@ public:
     	pre_proc_data->m_district = record->m_district;
     	pre_proc_data->m_status = record->m_status;
 
-    	          
         return true;
     };
 };

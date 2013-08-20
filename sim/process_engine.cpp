@@ -19,6 +19,7 @@ bool MaxMatchBatchEngine::processSim(const PreProcData& record,BatchRecords& rec
     
     ProcessStrategy& strategy = process_.getStrategy();
     StrategyResult maxResult ;
+    
     geo::GridResult::iterator iter =  sameIds.begin();
     for( ; iter != sameIds.end(); iter++ ) {
         PreProcData* inc = records.fetch(*iter) ;
@@ -33,9 +34,10 @@ bool MaxMatchBatchEngine::processSim(const PreProcData& record,BatchRecords& rec
             maxResult = result;
             maxResult.setNotNull();
         }
-    }   
-    process_.processOutput(maxResult, isBase);
-
+    }
+    if( !maxResult.isNull() ) { 
+        process_.processOutput(maxResult, isBase);
+    }
     return true;
 }
 

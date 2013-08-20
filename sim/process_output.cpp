@@ -22,6 +22,8 @@ void MutexStdOutput::output(const StrategyResult& result,bool isBase ) {
 		<< "\t" <<simTmpCache.m_status 
         << "\t" << "["<<strategy<<"]"
         << "\t" <<simTmpCache.m_name_score
+        << "\t" << simTmpCache.m_base_name
+        << "\t" << simTmpCache.m_inc_name
         << "\n";
 
     //TODO,need verify 
